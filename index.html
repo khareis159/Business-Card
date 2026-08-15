@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ebook: Consciência de Prosperidade | Carlos Alberto Reis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #10b981;
+            --gold: #f59e0b;
+            --bg: #020617;
+            --glass: rgba(15, 23, 42, 0.9);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- ESTILO DAS PÁGINAS --- */
+        .ebook-container {
+            width: 90%;
+            max-width: 500px;
+            height: 70vh;
+            perspective: 1000px;
+            position: relative;
+        }
+
+        .page {
+            width: 100%;
+            height: 100%;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--border);
+            border-radius: 30px;
+            padding: 40px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            cursor: pointer;
+            animation: slideIn 0.5s ease forwards;
+            position: absolute;
+        }
+
+        .page.active { display: flex; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: rotateY(-20deg) translateX(50px); }
+            to { opacity: 1; transform: rotateY(0) translateX(0); }
+        }
+
+        h2 { font-family: 'Orbitron', sans-serif; color: var(--gold); margin-bottom: 20px; font-size: 1.5rem; }
+        p { font-size: 1.1rem; line-height: 1.6; font-weight: 300; }
+        .page-num { position: absolute; bottom: 20px; font-family: 'Orbitron'; font-size: 0.7rem; color: var(--primary); }
+
+        /* --- NAVEGAÇÃO & BOTÕES --- */
+        .controls { margin-top: 30px; display: flex; gap: 15px; }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 100px;
+            border: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .btn-next { background: var(--primary); color: #000; box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
+        .btn-print { background: transparent; color: #fff; border: 1px solid var(--border); }
+        .btn:hover { transform: scale(1.05); filter: brightness(1.2); }
+
+        /* --- CONFIGURAÇÃO DE IMPRESSÃO (PDF) --- */
+        @media print {
+            body { background: white; color: black; overflow: visible; height: auto; }
+            .ebook-container { width: 100%; max-width: none; height: auto; display: block; perspective: none; }
+            .page { 
+                display: block !important; 
+                position: relative; 
+                page-break-after: always; 
+                border: 1px solid #eee;
+                background: white;
+                color: black;
+                box-shadow: none;
+                margin-bottom: 20px;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .controls, .page-num, .btn-print, #bg-canvas { display: none !important; }
+            h2 { color: #000; border-bottom: 2px solid #000; padding-bottom: 10px; }
+        }
+
+        #bg-canvas { position: fixed; top:0; left:0; z-index: -1; opacity: 0.3; }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="ebook-container" id="ebook">
+        <!-- PÁGINA 1 -->
+        <section class="page active" onclick="nextPage()">
+            <h2>FONTE DE DINHEIRO</h2>
+            <p>Você gostaria de obter sua própria fonte de renda independente que nunca se esgota?</p>
+            <div class="page-num">01 / 10</div>
+        </section>
+
+        <!-- PÁGINA 2 -->
+        <section class="page" onclick="nextPage()">
+            <h2>FREQUÊNCIA</h2>
+            <p>Consciência de Prosperidade não é sobre trabalhar duro, é sobre dominar a frequência da abundância.</p>
+            <div class="page-num">02 / 10</div>
+        </section>
+
+        <!-- PÁGINA 3 -->
+        <section class="page" onclick="nextPage()">
+            <h2>CRENÇA</h2>
+            <p>"O pensamento necessário para ganhar dinheiro é acreditar que existe o bastante para todo mundo."</p>
+            <div class="page-num">03 / 10</div>
+        </section>
+
+        <!-- PÁGINA 4 -->
+        <section class="page" onclick="nextPage()">
+            <h2>OPOSIÇÃO</h2>
+            <p>Procure o que todo mundo está fazendo e faça exatamente o oposto. A riqueza está onde ninguém olha.</p>
+            <div class="page-num">04 / 10</div>
+        </section>
+
+        <!-- PÁGINA 5 -->
+        <section class="page" onclick="nextPage()">
+            <h2>COMPLEXIDADE</h2>
+            <p>Quanto mais difícil o problema, maior a barreira de entrada e maior o seu prêmio. Complexidade é lucro.</p>
+            <div class="page-num">05 / 10</div>
+        </section>
+
+        <!-- PÁGINA 6 -->
+        <section class="page" onclick="nextPage()">
+            <h2>AÇÃO</h2>
+            <p>Pronto, Atire, Mire! Aja primeiro e analise depois. As condições nunca serão perfeitas. O mercado pune a hesitação.</p>
+            <div class="page-num">06 / 10</div>
+        </section>
+
+        <!-- PÁGINA 7 -->
+        <section class="page" onclick="nextPage()">
+            <h2>O PEDIDO</h2>
+            <p>Muitos falham porque não pedem. Faça sua apresentação e peça o fechamento. O dinheiro está no pedido.</p>
+            <div class="page-num">07 / 10</div>
+        </section>
+
+        <!-- PÁGINA 8 -->
+        <section class="page" onclick="nextPage()">
+            <h2>EQUILÍBRIO</h2>
+            <p>O Dízimo Cósmico: doe 1/10 da sua renda. Caridade abre portais que a lógica pura não consegue explicar.</p>
+            <div class="page-num">08 / 10</div>
+        </section>
+
+        <!-- PÁGINA 9 -->
+        <section class="page" onclick="nextPage()">
+            <h2>INTEGRIDADE</h2>
+            <p>Honestidade total. A confiança é a moeda mais cara. Sem integridade, o fracasso é garantido e final.</p>
+            <div class="page-num">09 / 10</div>
+        </section>
+
+        <!-- PÁGINA 10 (CARD DE NEGÓCIOS) -->
+        <section class="page" onclick="nextPage()">
+            <h2>GRÁFICA VIRTUAL</h2>
+            <p style="font-size: 0.9rem; color: var(--gold); font-family: 'Orbitron';">Business Card</p>
+            <p style="margin: 15px 0;"><strong>Desenvolvedor: Carlos Alberto Reis</strong><br>Ciclo 2026/2027</p>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Suporte & Apoio (Doações)<br>Fone/Pix: <strong>61999487649</strong></p>
+            <div class="page-num">10 / 10</div>
+        </section>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-print" onclick="window.print()">Imprimir PDF 📄</button>
+        <button class="btn btn-next" onclick="nextPage()">Próxima Página ➔</button>
+    </div>
+
+    <script>
+        let current = 0;
+        const pages = document.querySelectorAll('.page');
+
+        function nextPage() {
+            pages[current].classList.remove('active');
+            current = (current + 1) % pages.length;
+            pages[current].classList.add('active');
+        }
+
+        // --- BACKGROUND DE PARTICULAS ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.onresize = resize;
+        resize();
+
+        let particles = Array(60).fill().map(() => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            v: Math.random() * 0.5 + 0.2
+        }));
+
+        function draw() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = "#10b981";
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1, 0, Math.PI*2);
+                ctx.fill();
+                p.y -= p.v;
+                if(p.y < 0) p.y = canvas.height;
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+    </script>
+</body>
+</html>
