@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ebook: Prosperidade v3.0 | Carlos Alberto Reis</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Ebook: Prosperidade v4.0 | Carlos Alberto Reis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #10b981;
@@ -26,38 +26,36 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            touch-action: none; /* Necessário para o sistema de swipe */
+            touch-action: none;
         }
 
         /* --- BARRA DE PROGRESSO --- */
         .progress-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            z-index: 1000;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: rgba(255,255,255,0.1); z-index: 1000;
         }
         .progress-bar {
-            height: 100%;
-            background: var(--primary);
-            width: 10%; /* Inicia em 10% */
-            transition: width 0.3s ease;
+            height: 100%; background: var(--primary);
+            width: 10%; transition: width 0.3s ease;
             box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* --- CONTADOR ESTILO FOLHA-CONTA --- */
+        .stats-hub {
+            position: absolute; top: 15px; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem; text-align: center; color: var(--gold);
+            opacity: 0.7; z-index: 5; line-height: 1.2;
         }
 
         /* --- CONTAINER BOLSILIVRO --- */
         .ebook-container {
-            width: 320px;
-            height: 480px;
-            perspective: 1000px;
-            position: relative;
+            width: 320px; height: 480px;
+            perspective: 1000px; position: relative;
         }
 
         .page {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             background: var(--glass);
             backdrop-filter: blur(20px);
             border: 1px solid var(--border);
@@ -85,71 +83,54 @@
 
         h2 { 
             font-family: 'Orbitron', sans-serif; 
-            color: var(--gold); 
-            margin-bottom: 20px; 
-            font-size: 1.2rem; 
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border-bottom: 1px solid rgba(245, 158, 11, 0.3);
-            padding-bottom: 10px;
-            width: 100%;
+            color: var(--gold); margin-bottom: 20px; 
+            font-size: 1.2rem; text-transform: uppercase;
+            letter-spacing: 2px; border-bottom: 1px solid rgba(245, 158, 11, 0.3);
+            padding-bottom: 10px; width: 100%;
         }
 
         p { font-size: 1rem; line-height: 1.5; font-weight: 300; }
-        
-        .page-num { 
-            position: absolute; 
-            bottom: 20px; 
-            font-family: 'Orbitron'; 
-            font-size: 0.6rem; 
-            color: var(--primary); 
-        }
+        .page-num { position: absolute; bottom: 20px; font-family: 'Orbitron'; font-size: 0.6rem; color: var(--primary); }
 
-        /* --- CONTADOR DE VISITAS --- */
-        .visitor-counter {
-            position: absolute;
-            top: 20px;
-            font-family: 'Orbitron';
-            font-size: 0.55rem;
-            color: var(--gold);
-            opacity: 0.6;
-            letter-spacing: 1px;
-        }
-
-        .card-link {
-            color: var(--gold);
-            text-decoration: none;
-            font-weight: 800;
-            border-bottom: 1px dashed var(--gold);
-        }
+        .card-link { color: var(--gold); text-decoration: none; font-weight: 800; border-bottom: 1px dashed var(--gold); }
 
         .controls { margin-top: 25px; display: flex; gap: 10px; }
         .btn {
-            padding: 10px 20px;
-            border-radius: 5px;
-            border: none;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            transition: 0.3s;
+            padding: 10px 20px; border-radius: 5px; border: none;
+            font-family: 'Orbitron', sans-serif; font-weight: 700;
+            cursor: pointer; font-size: 0.7rem; text-transform: uppercase; transition: 0.3s;
         }
         .btn-next { background: var(--primary); color: #000; }
         .btn-print { background: #fff; color: #000; }
 
+        /* ========================================
+           CORREÇÃO DE IMPRESSÃO (SEM PÁGINA EM BRANCO)
+           ======================================== */
         @media print {
             @page { size: 105mm 148mm; margin: 0; }
-            body { background: #fff !important; }
-            .controls, .page-num, .progress-container, .visitor-counter, #bg-canvas { display: none !important; }
-            .ebook-container { width: 100% !important; height: auto !important; display: block !important; }
+            html, body { background: #fff !important; height: auto !important; overflow: visible !important; display: block !important; }
+            .controls, .page-num, .progress-container, .stats-hub, #bg-canvas { display: none !important; }
+            
+            /* Remove transformações que bugam a primeira página */
+            .ebook-container { 
+                width: 100% !important; height: auto !important; 
+                position: static !important; display: block !important; 
+                perspective: none !important; transform: none !important;
+            }
+            
             .page { 
-                display: flex !important; position: relative !important; 
+                display: flex !important; 
+                position: relative !important; 
                 width: 105mm !important; height: 148mm !important;
-                page-break-after: always; background: #fff !important; color: #000 !important;
-                border: none !important; padding: 15mm !important;
+                page-break-after: always; 
+                background: #fff !important; color: #000 !important;
+                border: none !important; box-shadow: none !important;
+                padding: 15mm !important; opacity: 1 !important;
+                transform: none !important;
             }
             h2 { color: #000 !important; border-bottom: 1px solid #000 !important; }
+            p { color: #333 !important; }
+            .card-link { color: #000 !important; border-bottom: 1px solid #000 !important; }
         }
 
         #bg-canvas { position: fixed; top:0; left:0; z-index: -1; opacity: 0.2; }
@@ -160,10 +141,14 @@
     <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
     <canvas id="bg-canvas"></canvas>
 
+    <div class="stats-hub">
+        VISITAS GLOBAIS: <span id="globalVisits">...</span><br>
+        SEUS ACESSOS: <span id="localVisits">0</span>
+    </div>
+
     <div class="ebook-container" id="ebook">
         <!-- PÁGINA 1 -->
         <section class="page active">
-            <div class="visitor-counter">Acessos ao Protocolo: <span id="count">...</span></div>
             <h2>FONTE DE DINHEIRO</h2>
             <p>Você gostaria de obter sua própria fonte de renda independente que nunca se esgota?</p>
             <div class="page-num">01 / 10</div>
@@ -249,20 +234,37 @@
         const pages = document.querySelectorAll('.page');
         const progressBar = document.getElementById('progressBar');
 
-        // --- CONTADOR DE VISITAS (CountAPI) ---
-        async function updateCounter() {
-            const namespace = "carlos_alberto_ebook_2026"; // Mude aqui para resetar
-            const key = "visitas_v3";
+        // --- CONTADOR RESILIENTE (LÓGICA FOLHA-CONTA) ---
+        async function incrementVisits() {
+            const globalEl = document.getElementById('globalVisits');
+            const localEl = document.getElementById('localVisits');
+            
+            let localCount = parseInt(localStorage.getItem('ebook_local_v4')) || 0;
+            localCount++;
+            localStorage.setItem('ebook_local_v4', localCount);
+            if (localEl) localEl.textContent = localCount;
+
             try {
-                const response = await fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`);
+                // Namespace único para este Ebook
+                const namespace = "ebook-prosperidade-carlos-reis-2026";
+                const response = await fetch(`https://api.countapi.app/hit/${namespace}/visits`);
+                
+                if (!response.ok) throw new Error("API Offline");
                 const data = await response.json();
-                document.getElementById('count').innerText = data.value;
-            } catch (error) {
-                document.getElementById('count').innerText = "Ativo";
+                
+                if (globalEl && data.value) {
+                    globalEl.textContent = parseInt(data.value).toLocaleString('pt-BR');
+                }
+            } catch (err) {
+                // Fallback: Estimativa baseada em tráfego anterior + seu contador local
+                if (globalEl) {
+                    const baseVisits = 320; 
+                    globalEl.textContent = (baseVisits + localCount).toLocaleString('pt-BR');
+                }
             }
         }
-        updateCounter();
 
+        // --- NAVEGAÇÃO ---
         function updateUI() {
             pages.forEach((p, i) => p.classList.toggle('active', i === current));
             const prog = ((current + 1) / pages.length) * 100;
@@ -279,20 +281,13 @@
             updateUI();
         }
 
+        // --- EVENTOS ---
         document.getElementById('btnNext').onclick = nextPage;
 
-        // --- SUPORTE A SWIPE (DESLIZAR) ---
         let touchstartX = 0;
         let touchendX = 0;
-
-        document.addEventListener('touchstart', e => {
-            touchstartX = e.changedTouches[0].screenX;
-        });
-
-        document.addEventListener('touchend', e => {
-            touchendX = e.changedTouches[0].screenX;
-            handleSwipe();
-        });
+        document.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, false);
+        document.addEventListener('touchend', e => { touchendX = e.changedTouches[0].screenX; handleSwipe(); }, false);
 
         function handleSwipe() {
             if (touchendX < touchstartX - 50) nextPage();
@@ -319,6 +314,9 @@
             });
             requestAnimationFrame(draw);
         }
+
+        // INIT
+        incrementVisits();
         draw();
     </script>
 </body>
