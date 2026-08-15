@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Ebook: Prosperidade v6.2 | Carlos Alberto Reis</title>
+    <title>Ebook: Prosperidade v7.0 | Master Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,6 +13,9 @@
             --card-bg: rgba(15, 23, 42, 0.95);
             --border: rgba(255, 255, 255, 0.1);
             --text: #ffffff;
+            /* Alturas Fixas para Blindagem */
+            --header-h: 100px;
+            --footer-h: 85px;
         }
 
         [data-theme="light"] {
@@ -24,30 +27,34 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-            height: 100vh;
-            height: 100dvh;
+        /* Trava o viewport para evitar scroll elástico que quebra o layout no J5 */
+        html, body {
             width: 100%;
+            height: 100%;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            position: fixed;
+            background-color: var(--bg);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            display: block; /* Mudança para block para controle rígido */
+            color: var(--text);
             transition: background-color 0.3s;
         }
 
-        /* --- HEADER UI (ALTURA FIXA PARA NÃO PULAR) --- */
-        .header-ui {
-            height: 90px;
+        /* --- CAMADA 1: TOPO (FIXO) --- */
+        header {
+            height: var(--header-h);
             width: 100%;
+            position: absolute;
+            top: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0; /* Bloqueia o encolhimento */
-            padding-top: 10px;
-            position: relative;
+            padding: 10px;
+            z-index: 10;
         }
 
         .stats-hub {
@@ -55,102 +62,107 @@
             font-size: 0.58rem;
             text-align: center;
             color: var(--gold);
-            background: rgba(0,0,0,0.3);
-            padding: 5px 12px;
+            background: rgba(0,0,0,0.4);
+            padding: 5px 15px;
             border-radius: 50px;
-            line-height: 1.2;
+            border: 1px solid var(--border);
         }
 
         .theme-btn {
-            position: absolute; right: 15px; top: 15px;
-            background: none; border: none; font-size: 1.2rem; cursor: pointer;
+            position: absolute; right: 20px; top: 20px;
+            background: none; border: none; font-size: 1.3rem; cursor: pointer;
         }
 
-        .p-container { width: 90%; max-width: 320px; height: 3px; background: rgba(128,128,128,0.1); margin-top: 10px; }
-        #pBar { height: 100%; background: var(--primary); width: 10%; transition: 0.3s; }
+        .p-bar-bg { width: 85%; max-width: 300px; height: 4px; background: rgba(128,128,128,0.1); margin-top: 10px; border-radius: 2px; }
+        #pBar { height: 100%; background: var(--primary); width: 10%; transition: 0.4s; box-shadow: 0 0 10px var(--primary); }
 
-        /* --- ÁREA CENTRAL (DINÂMICA) --- */
-        .content-area {
-            flex: 1; /* Ocupa o que sobrar entre o topo e o pé */
+        /* --- CAMADA 2: CONTEÚDO (CALCULADO) --- */
+        main {
+            position: absolute;
+            top: var(--header-h);
+            bottom: var(--footer-h);
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 10px;
-            min-height: 0; /* Correção para navegadores antigos não estourarem o flex */
+            overflow: hidden;
         }
 
         .ebook-container {
             width: 100%;
-            max-width: 310px;
+            max-width: 315px;
             height: 100%;
-            max-height: 420px; /* Proteção para o J5 */
             position: relative;
         }
 
         .page {
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 20px;
+            border-radius: 20px;
+            padding: 25px;
             display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
             position: absolute;
             top: 0; left: 0;
         }
 
-        .page.active { display: flex; }
+        .page.active { display: flex; animation: pageShow 0.4s ease; }
+        @keyframes pageShow { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
 
         h2 { 
             font-family: 'Orbitron', sans-serif; color: var(--gold); 
-            font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;
-            margin-bottom: 12px; border-bottom: 1px solid var(--gold); padding-bottom: 6px; width: 100%;
+            font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;
+            margin-bottom: 15px; border-bottom: 1px solid var(--gold); padding-bottom: 8px; width: 100%;
         }
 
-        p { font-size: 0.88rem; line-height: 1.4; font-weight: 300; }
-        .page-num { position: absolute; bottom: 12px; font-family: 'Orbitron'; font-size: 0.55rem; color: var(--primary); }
+        p { font-size: 0.9rem; line-height: 1.5; font-weight: 300; }
+        .page-num { position: absolute; bottom: 15px; font-family: 'Orbitron'; font-size: 0.6rem; color: var(--primary); }
 
-        /* --- FOOTER UI (ALTURA FIXA) --- */
-        .footer-ui {
-            height: 80px;
+        /* --- CAMADA 3: RODAPÉ (FIXO) --- */
+        footer {
+            height: var(--footer-h);
             width: 100%;
+            position: absolute;
+            bottom: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0 15px 15px 15px;
-            flex-shrink: 0; /* Bloqueia o encolhimento */
+            padding-bottom: env(safe-area-inset-bottom);
+            z-index: 10;
         }
 
-        .controls { width: 100%; max-width: 320px; display: flex; gap: 8px; }
+        .controls { width: 90%; max-width: 315px; display: flex; gap: 10px; }
 
         .btn {
-            flex: 1; padding: 14px; border-radius: 10px; border: none;
+            flex: 1; height: 50px; border-radius: 12px; border: none;
             font-family: 'Orbitron', sans-serif; font-weight: 700;
-            font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: 0.1s;
+            font-size: 0.75rem; text-transform: uppercase; cursor: pointer;
         }
-        .btn-next { background: var(--primary); color: #000; }
+        .btn-next { background: var(--primary); color: #000; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
         .btn-print { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); }
-        .btn:active { transform: scale(0.96); opacity: 0.8; }
+        .btn:active { transform: scale(0.95); opacity: 0.8; }
 
         .card-link { color: var(--gold); text-decoration: none; font-weight: bold; border-bottom: 1px dashed var(--gold); }
 
-        /* --- REGRAS DE PDF --- */
+        /* --- PRINT --- */
         @media print {
             @page { size: 105mm 148mm; margin: 0; }
-            body { background: #fff !important; display: block !important; }
-            .header-ui, .footer-ui, .page-num, #bg-canvas, .p-container { display: none !important; }
-            .content-area { padding: 0 !important; display: block !important; }
-            .ebook-container { width: 100% !important; height: auto !important; position: static !important; display: block !important; max-height: none !important; }
+            html, body { position: static; overflow: visible; height: auto; display: block; background: #fff; }
+            header, footer, .page-num, #bg-canvas, .theme-btn { display: none !important; }
+            main { position: static; display: block; padding: 0; }
+            .ebook-container { width: 100% !important; max-width: none; height: auto !important; position: static !important; display: block; }
             .page { 
                 display: flex !important; position: relative !important; width: 105mm !important; height: 148mm !important;
                 page-break-after: always !important; background: #fff !important; color: #000 !important;
-                border: none !important; padding: 15mm !important; justify-content: center !important; transform: none !important;
+                border: none !important; padding: 15mm !important; justify-content: center !important;
             }
             h2 { color: #000 !important; border-bottom: 1px solid #000 !important; }
         }
@@ -162,16 +174,16 @@
 
     <canvas id="bg-canvas"></canvas>
 
-    <div class="header-ui">
+    <header>
         <button class="theme-btn" onclick="toggleTheme()">🌓</button>
         <div class="stats-hub">
             🌐 ACESSOS GLOBAIS: <span id="gCount">...</span><br>
             👤 SEUS ACESSOS: <span id="lCount">0</span>
         </div>
-        <div class="p-container"><div id="pBar"></div></div>
-    </div>
+        <div class="p-bar-bg"><div id="pBar"></div></div>
+    </header>
 
-    <main class="content-area">
+    <main>
         <div class="ebook-container" id="ebook">
             <section class="page active">
                 <h2>FONTE DE DINHEIRO</h2>
@@ -223,7 +235,7 @@
                 <p style="margin-bottom: 10px;">
                     <a href="https://khareis159.github.io/Business-Card/" target="_blank" class="card-link">Business Card</a>
                 </p>
-                <p style="font-weight: 700; font-size: 0.85rem;">Carlos Alberto Reis</p>
+                <p style="font-weight: 700; font-size: 0.9rem;">Carlos Alberto Reis</p>
                 <p style="font-size: 0.7rem; color: var(--gold); margin-top: 5px;">Dev. 2016/2027</p>
                 <p style="font-size: 0.7rem; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 8px; width: 100%;">
                     Suporte & Apoio (Pix):<br><strong>61 999487649</strong>
@@ -233,59 +245,68 @@
         </div>
     </main>
 
-    <div class="footer-ui">
+    <footer>
         <div class="controls">
             <button class="btn btn-print" onclick="window.print()">Gerar PDF 📄</button>
             <button class="btn btn-next" onclick="nextPage()">Avançar ➔</button>
         </div>
-    </div>
+    </footer>
 
     <script>
         let current = 0;
         const pages = document.querySelectorAll('.page');
         const pBar = document.getElementById('pBar');
 
+        // --- CONTADOR (Lógica Folha-Conta Revisitada) ---
         function initCounter() {
             const gEl = document.getElementById('gCount');
             const lEl = document.getElementById('lCount');
-            let local = parseInt(localStorage.getItem('ebook_v62_local')) || 0;
+            let local = parseInt(localStorage.getItem('ebook_v7_local')) || 0;
             local++;
-            localStorage.setItem('ebook_v62_local', local);
+            localStorage.setItem('ebook_v7_local', local);
             lEl.textContent = local;
 
             const startDate = new Date('2026-01-01').getTime();
             const now = new Date().getTime();
             const daysPassed = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
-            const globalSimulated = 3866 + (daysPassed * 5) + local;
+            // Multiplicador 7 para um crescimento elegante
+            const globalSimulated = 5001 + (daysPassed * 7) + local;
             gEl.textContent = globalSimulated.toLocaleString('pt-BR');
         }
 
+        // --- TEMAS ---
         function toggleTheme() {
             const body = document.body;
             const newTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('ebook_v62_theme', newTheme);
+            localStorage.setItem('ebook_v7_theme', newTheme);
         }
-        if(localStorage.getItem('ebook_v62_theme')) {
-            document.body.setAttribute('data-theme', localStorage.getItem('ebook_v62_theme'));
+        if(localStorage.getItem('ebook_v7_theme')) {
+            document.body.setAttribute('data-theme', localStorage.getItem('ebook_v7_theme'));
         }
 
+        // --- NAVEGAÇÃO ---
         function updateUI() {
-            pages.forEach((p, i) => p.classList.toggle('active', i === current));
+            for(let i=0; i<pages.length; i++) {
+                pages[i].classList.remove('active');
+                pages[i].style.display = 'none';
+            }
+            pages[current].style.display = 'flex';
+            setTimeout(() => pages[current].classList.add('active'), 10);
             pBar.style.width = ((current + 1) / pages.length) * 100 + "%";
         }
         function nextPage() { current = (current + 1) % pages.length; updateUI(); }
         function prevPage() { current = (current - 1 + pages.length) % pages.length; updateUI(); }
 
-        // SWIPE
+        // SWIPE (Otimizado para motores antigos)
         let startX = 0;
         document.addEventListener('touchstart', e => startX = e.changedTouches[0].screenX, {passive: true});
         document.addEventListener('touchend', e => {
             let diff = e.changedTouches[0].screenX - startX;
-            if (Math.abs(diff) > 50) diff > 0 ? prevPage() : nextPage();
+            if (Math.abs(diff) > 60) diff > 0 ? prevPage() : nextPage();
         }, {passive: true});
 
-        // CANVAS
+        // CANVAS BACKGROUND
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
