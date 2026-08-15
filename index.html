@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Ebook: Prosperidade v6.1 | Carlos Alberto Reis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Ebook: Prosperidade v6.2 | Carlos Alberto Reis</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -22,29 +22,31 @@
             --text: #0f172a;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
         body {
             background-color: var(--bg);
             color: var(--text);
             font-family: 'Inter', sans-serif;
-            height: 100dvh; /* Altura dinâmica para celular */
+            height: 100vh;
+            height: 100dvh;
+            width: 100%;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: env(safe-area-inset-top) 15px env(safe-area-inset-bottom) 15px;
             transition: background-color 0.3s;
         }
 
-        /* --- UI TOP (REDUZIDA) --- */
+        /* --- HEADER UI (ALTURA FIXA PARA NÃO PULAR) --- */
         .header-ui {
+            height: 90px;
             width: 100%;
-            padding-top: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            flex-shrink: 0; /* Bloqueia o encolhimento */
+            padding-top: 10px;
             position: relative;
         }
 
@@ -54,33 +56,36 @@
             text-align: center;
             color: var(--gold);
             background: rgba(0,0,0,0.3);
-            padding: 4px 12px;
+            padding: 5px 12px;
             border-radius: 50px;
             line-height: 1.2;
         }
 
         .theme-btn {
-            position: absolute; right: 0; top: 10px;
-            background: none; border: none; font-size: 1.1rem; cursor: pointer;
+            position: absolute; right: 15px; top: 15px;
+            background: none; border: none; font-size: 1.2rem; cursor: pointer;
         }
 
-        /* --- PROGRESS BAR --- */
-        .progress-bar-container {
-            width: 100%; height: 3px; background: rgba(128,128,128,0.1);
-            margin-top: 8px; border-radius: 2px;
-        }
-        #pBar { height: 100%; background: var(--primary); width: 10%; transition: 0.3s; box-shadow: 0 0 8px var(--primary); }
+        .p-container { width: 90%; max-width: 320px; height: 3px; background: rgba(128,128,128,0.1); margin-top: 10px; }
+        #pBar { height: 100%; background: var(--primary); width: 10%; transition: 0.3s; }
 
-        /* --- EBOOK CONTAINER (COMPACTO) --- */
-        .ebook-container {
-            flex-grow: 1; /* Ocupa o espaço disponível sem empurrar botões */
+        /* --- ÁREA CENTRAL (DINÂMICA) --- */
+        .content-area {
+            flex: 1; /* Ocupa o que sobrar entre o topo e o pé */
             width: 100%;
-            max-width: 320px;
-            max-height: 440px; /* Limite para não estourar em telas pequenas */
-            position: relative;
-            margin: 10px 0;
             display: flex;
             align-items: center;
+            justify-content: center;
+            padding: 10px;
+            min-height: 0; /* Correção para navegadores antigos não estourarem o flex */
+        }
+
+        .ebook-container {
+            width: 100%;
+            max-width: 310px;
+            height: 100%;
+            max-height: 420px; /* Proteção para o J5 */
+            position: relative;
         }
 
         .page {
@@ -89,54 +94,59 @@
             backdrop-filter: blur(10px);
             border: 1px solid var(--border);
             border-radius: 18px;
-            padding: 25px;
+            padding: 20px;
             display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             position: absolute;
+            top: 0; left: 0;
         }
 
-        .page.active { display: flex; animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        .page.active { display: flex; }
 
         h2 { 
             font-family: 'Orbitron', sans-serif; color: var(--gold); 
-            font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;
-            margin-bottom: 15px; border-bottom: 1px solid var(--gold); padding-bottom: 8px; width: 100%;
+            font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;
+            margin-bottom: 12px; border-bottom: 1px solid var(--gold); padding-bottom: 6px; width: 100%;
         }
 
-        p { font-size: 0.9rem; line-height: 1.4; font-weight: 300; }
-        .page-num { position: absolute; bottom: 15px; font-family: 'Orbitron'; font-size: 0.55rem; color: var(--primary); }
+        p { font-size: 0.88rem; line-height: 1.4; font-weight: 300; }
+        .page-num { position: absolute; bottom: 12px; font-family: 'Orbitron'; font-size: 0.55rem; color: var(--primary); }
 
-        /* --- FOOTER UI (FIXO NO RODAPÉ) --- */
-        .controls {
+        /* --- FOOTER UI (ALTURA FIXA) --- */
+        .footer-ui {
+            height: 80px;
             width: 100%;
-            max-width: 320px;
             display: flex;
-            gap: 8px;
-            padding-bottom: 15px; /* Espaço seguro final */
+            align-items: center;
+            justify-content: center;
+            padding: 0 15px 15px 15px;
+            flex-shrink: 0; /* Bloqueia o encolhimento */
         }
+
+        .controls { width: 100%; max-width: 320px; display: flex; gap: 8px; }
 
         .btn {
-            flex: 1; padding: 12px; border-radius: 10px; border: none;
+            flex: 1; padding: 14px; border-radius: 10px; border: none;
             font-family: 'Orbitron', sans-serif; font-weight: 700;
-            font-size: 0.7rem; text-transform: uppercase; cursor: pointer; transition: 0.2s;
+            font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: 0.1s;
         }
         .btn-next { background: var(--primary); color: #000; }
         .btn-print { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); }
-        .btn:active { transform: scale(0.95); }
+        .btn:active { transform: scale(0.96); opacity: 0.8; }
 
         .card-link { color: var(--gold); text-decoration: none; font-weight: bold; border-bottom: 1px dashed var(--gold); }
 
-        /* --- IMPRESSÃO --- */
+        /* --- REGRAS DE PDF --- */
         @media print {
             @page { size: 105mm 148mm; margin: 0; }
             body { background: #fff !important; display: block !important; }
-            .header-ui, .controls, .page-num, #bg-canvas, .progress-bar-container { display: none !important; }
-            .ebook-container { width: 100% !important; height: auto !important; position: static !important; display: block !important; }
+            .header-ui, .footer-ui, .page-num, #bg-canvas, .p-container { display: none !important; }
+            .content-area { padding: 0 !important; display: block !important; }
+            .ebook-container { width: 100% !important; height: auto !important; position: static !important; display: block !important; max-height: none !important; }
             .page { 
                 display: flex !important; position: relative !important; width: 105mm !important; height: 148mm !important;
                 page-break-after: always !important; background: #fff !important; color: #000 !important;
@@ -145,10 +155,12 @@
             h2 { color: #000 !important; border-bottom: 1px solid #000 !important; }
         }
 
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.1; }
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.15; pointer-events: none; }
     </style>
 </head>
 <body data-theme="dark">
+
+    <canvas id="bg-canvas"></canvas>
 
     <div class="header-ui">
         <button class="theme-btn" onclick="toggleTheme()">🌓</button>
@@ -156,93 +168,76 @@
             🌐 ACESSOS GLOBAIS: <span id="gCount">...</span><br>
             👤 SEUS ACESSOS: <span id="lCount">0</span>
         </div>
-        <div class="progress-bar-container"><div id="pBar"></div></div>
+        <div class="p-container"><div id="pBar"></div></div>
     </div>
 
-    <canvas id="bg-canvas"></canvas>
+    <main class="content-area">
+        <div class="ebook-container" id="ebook">
+            <section class="page active">
+                <h2>FONTE DE DINHEIRO</h2>
+                <p>Você gostaria de obter sua própria fonte de renda independente que nunca se esgota?</p>
+                <div class="page-num">01 / 10</div>
+            </section>
+            <section class="page">
+                <h2>ABUNDÂNCIA</h2>
+                <p>Dominar a frequência da abundância não é sorte. É ciência aplicada ao pensamento e ação.</p>
+                <div class="page-num">02 / 10</div>
+            </section>
+            <section class="page">
+                <h2>CRENÇA</h2>
+                <p>"O pensamento necessário para prosperar é crer que existe o bastante para todo mundo."</p>
+                <div class="page-num">03 / 10</div>
+            </section>
+            <section class="page">
+                <h2>OPOSIÇÃO</h2>
+                <p>Procure o que todos estão fazendo e faça o oposto. A riqueza habita onde a multidão não olha.</p>
+                <div class="page-num">04 / 10</div>
+            </section>
+            <section class="page">
+                <h2>COMPLEXIDADE</h2>
+                <p>Problemas difíceis afastam curiosos e premiam especialistas. Complexidade é lucro garantido.</p>
+                <div class="page-num">05 / 10</div>
+            </section>
+            <section class="page">
+                <h2>AGIR</h2>
+                <p>Pronto, Atire, Mire! Aja agora. A perfeição é inimiga da execução. O mercado pune a hesitação.</p>
+                <div class="page-num">06 / 10</div>
+            </section>
+            <section class="page">
+                <h2>O PEDIDO</h2>
+                <p>Muitos vendedores falham por não pedirem o fechamento. Peça. O dinheiro está no pedido.</p>
+                <div class="page-num">07 / 10</div>
+            </section>
+            <section class="page">
+                <h2>EQUILÍBRIO</h2>
+                <p>A Lei do Dízimo: doe 1/10 da renda. A caridade abre os portais das oportunidades universais.</p>
+                <div class="page-num">08 / 10</div>
+            </section>
+            <section class="page">
+                <h2>INTEGRIDADE</h2>
+                <p>Honestidade é o maior ativo de um empreendedor. Se prometeu, entregue. Confiança é poder.</p>
+                <div class="page-num">09 / 10</div>
+            </section>
+            <section class="page">
+                <h2>GRÁFICA VIRTUAL</h2>
+                <p style="margin-bottom: 10px;">
+                    <a href="https://khareis159.github.io/Business-Card/" target="_blank" class="card-link">Business Card</a>
+                </p>
+                <p style="font-weight: 700; font-size: 0.85rem;">Carlos Alberto Reis</p>
+                <p style="font-size: 0.7rem; color: var(--gold); margin-top: 5px;">Dev. 2016/2027</p>
+                <p style="font-size: 0.7rem; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 8px; width: 100%;">
+                    Suporte & Apoio (Pix):<br><strong>61 999487649</strong>
+                </p>
+                <div class="page-num">10 / 10</div>
+            </section>
+        </div>
+    </main>
 
-    <div class="ebook-container" id="ebook">
-        <!-- PÁGINA 1 -->
-        <section class="page active">
-            <h2>FONTE DE DINHEIRO</h2>
-            <p>Você gostaria de obter sua própria fonte de renda independente que nunca se esgota?</p>
-            <div class="page-num">01 / 10</div>
-        </section>
-
-        <!-- PÁGINA 2 -->
-        <section class="page">
-            <h2>ABUNDÂNCIA</h2>
-            <p>Dominar a frequência da abundância não é sorte. É ciência aplicada ao pensamento e ação.</p>
-            <div class="page-num">02 / 10</div>
-        </section>
-
-        <!-- PÁGINA 3 -->
-        <section class="page">
-            <h2>CRENÇA</h2>
-            <p>"O pensamento necessário para prosperar é crer que existe o bastante para todo mundo."</p>
-            <div class="page-num">03 / 10</div>
-        </section>
-
-        <!-- PÁGINA 4 -->
-        <section class="page">
-            <h2>OPOSIÇÃO</h2>
-            <p>Procure o que todos estão fazendo e faça o oposto. A riqueza habita onde a multidão não olha.</p>
-            <div class="page-num">04 / 10</div>
-        </section>
-
-        <!-- PÁGINA 5 -->
-        <section class="page">
-            <h2>COMPLEXIDADE</h2>
-            <p>Problemas difíceis afastam curiosos e premiam especialistas. Complexidade é lucro garantido.</p>
-            <div class="page-num">05 / 10</div>
-        </section>
-
-        <!-- PÁGINA 6 -->
-        <section class="page">
-            <h2>AGIR</h2>
-            <p>Pronto, Atire, Mire! Aja agora. A perfeição é inimiga da execução. O mercado pune a hesitação.</p>
-            <div class="page-num">06 / 10</div>
-        </section>
-
-        <!-- PÁGINA 7 -->
-        <section class="page">
-            <h2>O PEDIDO</h2>
-            <p>Muitos vendedores falham por não pedirem o fechamento. Peça. O dinheiro está no pedido.</p>
-            <div class="page-num">07 / 10</div>
-        </section>
-
-        <!-- PÁGINA 8 -->
-        <section class="page">
-            <h2>EQUILÍBRIO</h2>
-            <p>A Lei do Dízimo: doe 1/10 da renda. A caridade abre os portais das oportunidades universais.</p>
-            <div class="page-num">08 / 10</div>
-        </section>
-
-        <!-- PÁGINA 9 -->
-        <section class="page">
-            <h2>INTEGRIDADE</h2>
-            <p>Honestidade é o maior ativo de um empreendedor. Se prometeu, entregue. Confiança é poder.</p>
-            <div class="page-num">09 / 10</div>
-        </section>
-
-        <!-- PÁGINA 10 -->
-        <section class="page">
-            <h2>GRÁFICA VIRTUAL</h2>
-            <p style="margin-bottom: 10px;">
-                <a href="https://khareis159.github.io/Business-Card/" target="_blank" class="card-link">Business Card</a>
-            </p>
-            <p style="font-weight: 700; font-size: 0.85rem;">Carlos Alberto Reis</p>
-            <p style="font-size: 0.7rem; color: var(--gold); margin-top: 5px;">Dev. 2016/2027</p>
-            <p style="font-size: 0.7rem; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 8px; width: 100%;">
-                Suporte & Apoio (Pix):<br><strong>61 999487649</strong>
-            </p>
-            <div class="page-num">10 / 10</div>
-        </section>
-    </div>
-
-    <div class="controls">
-        <button class="btn btn-print" onclick="window.print()">Gerar PDF 📄</button>
-        <button class="btn btn-next" onclick="nextPage()">Avançar ➔</button>
+    <div class="footer-ui">
+        <div class="controls">
+            <button class="btn btn-print" onclick="window.print()">Gerar PDF 📄</button>
+            <button class="btn btn-next" onclick="nextPage()">Avançar ➔</button>
+        </div>
     </div>
 
     <script>
@@ -250,39 +245,31 @@
         const pages = document.querySelectorAll('.page');
         const pBar = document.getElementById('pBar');
 
-        // --- MOTOR DE CONTADOR RESILIENTE (SEM ERROS DE API) ---
         function initCounter() {
             const gEl = document.getElementById('gCount');
             const lEl = document.getElementById('lCount');
-            
-            // 1. Local
-            let local = parseInt(localStorage.getItem('ebook_v61_local')) || 0;
+            let local = parseInt(localStorage.getItem('ebook_v62_local')) || 0;
             local++;
-            localStorage.setItem('ebook_v61_local', local);
+            localStorage.setItem('ebook_v62_local', local);
             lEl.textContent = local;
 
-            // 2. Global Estático-Dinâmico (Lógica de Engenharia)
-            // Base inicial em Jan 2026 + crescimento por tempo + uso local
             const startDate = new Date('2026-01-01').getTime();
             const now = new Date().getTime();
             const daysPassed = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
-            const globalSimulated = 2480 + (daysPassed * 7) + local;
-            
+            const globalSimulated = 3866 + (daysPassed * 5) + local;
             gEl.textContent = globalSimulated.toLocaleString('pt-BR');
         }
 
-        // --- TEMAS ---
         function toggleTheme() {
             const body = document.body;
             const newTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('ebook_v61_theme', newTheme);
+            localStorage.setItem('ebook_v62_theme', newTheme);
         }
-        if(localStorage.getItem('ebook_v61_theme')) {
-            document.body.setAttribute('data-theme', localStorage.getItem('ebook_v61_theme'));
+        if(localStorage.getItem('ebook_v62_theme')) {
+            document.body.setAttribute('data-theme', localStorage.getItem('ebook_v62_theme'));
         }
 
-        // --- NAVEGAÇÃO ---
         function updateUI() {
             pages.forEach((p, i) => p.classList.toggle('active', i === current));
             pBar.style.width = ((current + 1) / pages.length) * 100 + "%";
@@ -292,18 +279,18 @@
 
         // SWIPE
         let startX = 0;
-        document.addEventListener('touchstart', e => startX = e.changedTouches[0].screenX);
+        document.addEventListener('touchstart', e => startX = e.changedTouches[0].screenX, {passive: true});
         document.addEventListener('touchend', e => {
             let diff = e.changedTouches[0].screenX - startX;
             if (Math.abs(diff) > 50) diff > 0 ? prevPage() : nextPage();
-        });
+        }, {passive: true});
 
         // CANVAS
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.onresize = resize; resize();
-        let particles = Array(25).fill().map(() => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, v: Math.random() * 0.2 + 0.1 }));
+        let particles = Array(20).fill().map(() => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, v: Math.random() * 0.2 + 0.1 }));
         function draw() {
             ctx.clearRect(0,0,canvas.width, canvas.height); 
             ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--primary');
