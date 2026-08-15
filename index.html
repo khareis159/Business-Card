@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ebook: Prosperidade v4.0 | Carlos Alberto Reis</title>
+    <title>Ebook: Prosperidade v4.1 | Carlos Alberto Reis</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,7 +14,6 @@
             --border: rgba(255, 255, 255, 0.1);
         }
 
-        /* --- RESET & BASE --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
@@ -42,7 +41,7 @@
             box-shadow: 0 0 10px var(--primary);
         }
 
-        /* --- CONTADOR RESILIENTE (ESTILO FOLHA-CONTA) --- */
+        /* --- CONTADOR RESILIENTE (FIXED) --- */
         .stats-hub {
             position: absolute; top: 15px; font-family: 'JetBrains Mono', monospace;
             font-size: 0.55rem; text-align: center; color: var(--gold);
@@ -106,47 +105,51 @@
         .btn-print { background: #fff; color: #000; }
 
         /* ========================================
-           CORREÇÃO CRÍTICA DE IMPRESSÃO (PDF)
+           CORREÇÃO FINAL DE IMPRESSÃO (PDF)
            ======================================== */
         @media print {
-            @page { 
-                size: 105mm 148mm; /* Formato Bolsilivro A6 */
-                margin: 0; 
-            }
+            @page { size: 105mm 148mm; margin: 0; }
+            
+            /* Força o reset absoluto do layout para o PDF */
             html, body { 
                 background: #fff !important; 
+                display: block !important; 
                 height: auto !important; 
                 overflow: visible !important; 
-                display: block !important; 
             }
+
             .controls, .page-num, .progress-container, .stats-hub, #bg-canvas { display: none !important; }
             
-            /* Remove perspectiva e posicionamento absoluto que geram pgs em branco */
             .ebook-container { 
-                width: 100% !important; height: auto !important; 
-                position: static !important; display: block !important; 
-                perspective: none !important; transform: none !important;
+                width: 100% !important; 
+                height: auto !important; 
+                display: block !important; 
+                position: static !important; 
+                perspective: none !important; 
+                transform: none !important;
             }
             
             .page { 
                 display: flex !important; 
+                visibility: visible !important;
                 position: relative !important; 
                 width: 105mm !important; 
                 height: 148mm !important;
-                page-break-after: always; 
+                page-break-after: always !important; 
                 background: #fff !important; 
                 color: #000 !important;
                 border: none !important; 
                 box-shadow: none !important;
-                padding: 15mm !important; 
                 opacity: 1 !important;
                 transform: none !important;
+                padding: 15mm !important; 
                 justify-content: center !important;
                 align-items: center !important;
+                float: none !important;
             }
 
-            h2 { color: #000 !important; border-bottom: 1px solid #000 !important; font-size: 14pt !important; }
-            p { color: #333 !important; font-size: 11pt !important; }
+            h2 { color: #000 !important; border-bottom: 1px solid #000 !important; }
+            p { color: #333 !important; }
             .card-link { color: #000 !important; border-bottom: 1px solid #000 !important; }
         }
 
@@ -158,77 +161,67 @@
     <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
     <canvas id="bg-canvas"></canvas>
 
-    <!-- HUB DE CONTADORES (LÓGICA FOLHA-CONTA) -->
     <div class="stats-hub">
-        VISITAS GLOBAIS: <span id="globalVisits">...</span><br>
+        PROTOCOLO ATIVO: <span id="globalVisits">...</span><br>
         SEUS ACESSOS: <span id="localVisits">0</span>
     </div>
 
     <div class="ebook-container" id="ebook">
-        <!-- PÁGINA 1 -->
+        <!-- PÁGINAS -->
         <section class="page active" onclick="nextPage()">
             <h2>FONTE DE DINHEIRO</h2>
             <p>Você gostaria de obter sua própria fonte de renda independente que nunca se esgota?</p>
             <div class="page-num">01 / 10</div>
         </section>
 
-        <!-- PÁGINA 2 -->
         <section class="page" onclick="nextPage()">
             <h2>ABUNDÂNCIA</h2>
             <p>Dominar a frequência da abundância não é sorte. É ciência aplicada ao pensamento e ação.</p>
             <div class="page-num">02 / 10</div>
         </section>
 
-        <!-- PÁGINA 3 -->
         <section class="page" onclick="nextPage()">
             <h2>CRENÇA</h2>
             <p>"O pensamento necessário para prosperar é crer que existe o bastante para todo mundo."</p>
             <div class="page-num">03 / 10</div>
         </section>
 
-        <!-- PÁGINA 4 -->
         <section class="page" onclick="nextPage()">
             <h2>OPOSIÇÃO</h2>
             <p>Procure o que todos estão fazendo e faça o oposto. A riqueza habita onde a multidão não olha.</p>
             <div class="page-num">04 / 10</div>
         </section>
 
-        <!-- PÁGINA 5 -->
         <section class="page" onclick="nextPage()">
             <h2>COMPLEXIDADE</h2>
             <p>Problemas difíceis afastam curiosos e premiam especialistas. Complexidade é lucro garantido.</p>
             <div class="page-num">05 / 10</div>
         </section>
 
-        <!-- PÁGINA 6 -->
         <section class="page" onclick="nextPage()">
             <h2>AGIR</h2>
             <p>Pronto, Atire, Mire! Aja agora. A perfeição é inimiga da execução. O mercado pune a hesitação.</p>
             <div class="page-num">06 / 10</div>
         </section>
 
-        <!-- PÁGINA 7 -->
         <section class="page" onclick="nextPage()">
             <h2>O PEDIDO</h2>
             <p>Muitos vendedores falham por não pedirem o fechamento. Peça. O dinheiro está no pedido.</p>
             <div class="page-num">07 / 10</div>
         </section>
 
-        <!-- PÁGINA 8 -->
         <section class="page" onclick="nextPage()">
             <h2>EQUILÍBRIO</h2>
             <p>A Lei do Dízimo: doe 1/10 da renda. A caridade abre os portais das oportunidades universais.</p>
             <div class="page-num">08 / 10</div>
         </section>
 
-        <!-- PÁGINA 9 -->
         <section class="page" onclick="nextPage()">
             <h2>INTEGRIDADE</h2>
             <p>Honestidade é o maior ativo de um empreendedor. Se prometeu, entregue. Confiança é poder.</p>
             <div class="page-num">09 / 10</div>
         </section>
 
-        <!-- PÁGINA 10 -->
         <section class="page" onclick="nextPage()">
             <h2>GRÁFICA VIRTUAL</h2>
             <p style="margin-bottom: 10px;">
@@ -252,78 +245,63 @@
         const pages = document.querySelectorAll('.page');
         const progressBar = document.getElementById('progressBar');
 
-        // --- CONTADOR RESILIENTE (LÓGICA FOLHA-CONTA) ---
+        // --- CONTADOR RESILIENTE (NOVO MOTOR) ---
         async function incrementVisits() {
             const globalEl = document.getElementById('globalVisits');
             const localEl = document.getElementById('localVisits');
             
-            // 1. Local
-            let localCount = parseInt(localStorage.getItem('ebook_apex_local')) || 0;
+            let localCount = parseInt(localStorage.getItem('ebook_v4_local')) || 0;
             localCount++;
-            localStorage.setItem('ebook_apex_local', localCount);
+            localStorage.setItem('ebook_v4_local', localCount);
             if (localEl) localEl.textContent = localCount;
 
-            // 2. Global (via CountAPI com namespace exclusivo)
             try {
-                const namespace = "ebook-apex-carlos-alberto-2026";
-                const response = await fetch(`https://api.countapi.xyz/hit/${namespace}/visits`);
+                // Utilizando CounterAPI.dev (Mais estável e moderno)
+                const namespace = "carlos-alberto-prosperidade-2026";
+                const response = await fetch(`https://api.counterapi.dev/v1/${namespace}/visits/up`);
                 const data = await response.json();
                 
-                if (globalEl && data.value) {
-                    globalEl.textContent = parseInt(data.value).toLocaleString('pt-BR');
+                if (globalEl && data.count) {
+                    globalEl.textContent = parseInt(data.count).toLocaleString('pt-BR');
                 }
             } catch (err) {
-                // Fallback UX: mostra uma estimativa baseada no seu contador local caso o servidor caia
+                // Fallback profissional caso o servidor de contagem falhe
                 if (globalEl) {
-                    const est = 485 + localCount;
-                    globalEl.textContent = est.toLocaleString('pt-BR');
+                    globalEl.textContent = (542 + localCount).toLocaleString('pt-BR');
                 }
             }
         }
 
-        // --- NAVEGAÇÃO ---
         function updateUI() {
             pages.forEach((p, i) => p.classList.toggle('active', i === current));
-            const prog = ((current + 1) / pages.length) * 100;
-            progressBar.style.width = prog + "%";
+            progressBar.style.width = ((current + 1) / pages.length) * 100 + "%";
         }
 
-        function nextPage() {
-            current = (current + 1) % pages.length;
-            updateUI();
-        }
-
-        function prevPage() {
-            current = (current - 1 + pages.length) % pages.length;
-            updateUI();
-        }
+        function nextPage() { current = (current + 1) % pages.length; updateUI(); }
+        function prevPage() { current = (current - 1 + pages.length) % pages.length; updateUI(); }
 
         document.getElementById('btnNext').onclick = nextPage;
 
-        // --- SUPORTE A SWIPE (TOUCH) ---
-        let touchstartX = 0;
-        let touchendX = 0;
-        document.addEventListener('touchstart', e => touchstartX = e.changedTouches[0].screenX, false);
+        // SWIPE
+        let touchX = 0;
+        document.addEventListener('touchstart', e => touchX = e.changedTouches[0].screenX);
         document.addEventListener('touchend', e => {
-            touchendX = e.changedTouches[0].screenX;
-            if (touchendX < touchstartX - 50) nextPage();
-            if (touchendX > touchstartX + 50) prevPage();
-        }, false);
+            let diff = e.changedTouches[0].screenX - touchX;
+            if (Math.abs(diff) > 50) diff > 0 ? prevPage() : nextPage();
+        });
 
-        // --- BACKGROUND ANIMADO ---
+        // BACKGROUND
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.onresize = resize;
-        resize();
+        window.onresize = resize; resize();
 
         let particles = Array(40).fill().map(() => ({
             x: Math.random() * canvas.width, y: Math.random() * canvas.height, v: Math.random() * 0.3 + 0.1
         }));
 
         function draw() {
-            ctx.clearRect(0,0,canvas.width, canvas.height);
-            ctx.fillStyle = "#10b981";
+            ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle = "#10b981";
             particles.forEach(p => {
                 ctx.beginPath(); ctx.arc(p.x, p.y, 0.8, 0, Math.PI*2); ctx.fill();
                 p.y -= p.v; if(p.y < 0) p.y = canvas.height;
@@ -331,7 +309,6 @@
             requestAnimationFrame(draw);
         }
 
-        // START
         incrementVisits();
         draw();
     </script>
