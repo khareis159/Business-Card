@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ebook: Consciência de Prosperidade | Carlos Alberto Reis</title>
+    <title>Ebook: Consciência de Prosperidade | Bolsilivro</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #10b981;
             --gold: #f59e0b;
             --bg: #020617;
-            --glass: rgba(15, 23, 42, 0.9);
+            --glass: rgba(15, 23, 42, 0.95);
             --border: rgba(255, 255, 255, 0.1);
         }
 
@@ -28,11 +28,10 @@
             justify-content: center;
         }
 
-        /* --- ESTILO DAS PÁGINAS --- */
+        /* --- CONTAINER FORMATO BOLSILIVRO (Aprox. 10x15cm) --- */
         .ebook-container {
-            width: 90%;
-            max-width: 500px;
-            height: 70vh;
+            width: 320px; /* Proporção de bolsilivro na tela */
+            height: 480px;
             perspective: 1000px;
             position: relative;
         }
@@ -42,71 +41,111 @@
             height: 100%;
             background: var(--glass);
             backdrop-filter: blur(20px);
-            border: 2px solid var(--border);
-            border-radius: 30px;
-            padding: 40px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 30px;
             display: none;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: center; /* Centraliza Verticalmente */
+            align-items: center;     /* Centraliza Horizontalmente */
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
             cursor: pointer;
-            animation: slideIn 0.5s ease forwards;
+            animation: fadeIn 0.4s ease-out forwards;
             position: absolute;
         }
 
         .page.active { display: flex; }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: rotateY(-20deg) translateX(50px); }
-            to { opacity: 1; transform: rotateY(0) translateX(0); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
 
-        h2 { font-family: 'Orbitron', sans-serif; color: var(--gold); margin-bottom: 20px; font-size: 1.5rem; }
-        p { font-size: 1.1rem; line-height: 1.6; font-weight: 300; }
-        .page-num { position: absolute; bottom: 20px; font-family: 'Orbitron'; font-size: 0.7rem; color: var(--primary); }
+        h2 { 
+            font-family: 'Orbitron', sans-serif; 
+            color: var(--gold); 
+            margin-bottom: 20px; 
+            font-size: 1.2rem; 
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(245, 158, 11, 0.3);
+            padding-bottom: 10px;
+            width: 100%;
+        }
 
-        /* --- NAVEGAÇÃO & BOTÕES --- */
-        .controls { margin-top: 30px; display: flex; gap: 15px; }
+        p { font-size: 1rem; line-height: 1.5; font-weight: 300; }
+        
+        .page-num { 
+            position: absolute; 
+            bottom: 20px; 
+            font-family: 'Orbitron'; 
+            font-size: 0.6rem; 
+            color: var(--primary); 
+            letter-spacing: 2px;
+        }
 
+        /* --- LINK GITHUB --- */
+        .card-link {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 800;
+            border-bottom: 1px dashed var(--gold);
+            transition: 0.3s;
+        }
+        .card-link:hover { color: #fff; border-bottom-style: solid; }
+
+        /* --- NAVEGAÇÃO --- */
+        .controls { margin-top: 25px; display: flex; gap: 10px; }
         .btn {
-            padding: 12px 25px;
-            border-radius: 100px;
+            padding: 10px 20px;
+            border-radius: 5px;
             border: none;
             font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
+            font-weight: 700;
             cursor: pointer;
             transition: 0.3s;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
         }
+        .btn-next { background: var(--primary); color: #000; }
+        .btn-print { background: #fff; color: #000; }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
 
-        .btn-next { background: var(--primary); color: #000; box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
-        .btn-print { background: transparent; color: #fff; border: 1px solid var(--border); }
-        .btn:hover { transform: scale(1.05); filter: brightness(1.2); }
-
-        /* --- CONFIGURAÇÃO DE IMPRESSÃO (PDF) --- */
+        /* ========================================
+           CONFIGURAÇÃO DE IMPRESSÃO (BOLSILIVRO A6)
+           ======================================== */
         @media print {
-            body { background: white; color: black; overflow: visible; height: auto; }
-            .ebook-container { width: 100%; max-width: none; height: auto; display: block; perspective: none; }
+            @page {
+                size: 105mm 148mm; /* Formato A6 de Bolsilivro */
+                margin: 0;
+            }
+            body { background: #fff !important; overflow: visible !important; height: auto !important; }
+            #bg-canvas, .controls, .page-num { display: none !important; }
+            
+            .ebook-container { width: 100% !important; height: auto !important; display: block !important; perspective: none !important; }
+            
             .page { 
-                display: block !important; 
-                position: relative; 
+                display: flex !important; /* Força o flexbox na impressão */
+                position: relative !important; 
+                width: 105mm !important;
+                height: 148mm !important;
                 page-break-after: always; 
-                border: 1px solid #eee;
-                background: white;
-                color: black;
-                box-shadow: none;
-                margin-bottom: 20px;
+                background: #fff !important;
+                color: #000 !important;
+                border: none !important;
+                box-shadow: none !important;
                 opacity: 1 !important;
                 transform: none !important;
+                padding: 15mm !important; /* Margem interna de segurança */
             }
-            .controls, .page-num, .btn-print, #bg-canvas { display: none !important; }
-            h2 { color: #000; border-bottom: 2px solid #000; padding-bottom: 10px; }
+
+            h2 { color: #000 !important; border-bottom: 1px solid #000 !important; font-size: 14pt !important; }
+            p { font-size: 11pt !important; color: #333 !important; }
+            .card-link { color: #000 !important; border-bottom: 1px solid #000 !important; }
         }
 
-        #bg-canvas { position: fixed; top:0; left:0; z-index: -1; opacity: 0.3; }
+        #bg-canvas { position: fixed; top:0; left:0; z-index: -1; opacity: 0.2; }
     </style>
 </head>
 <body>
@@ -123,73 +162,77 @@
 
         <!-- PÁGINA 2 -->
         <section class="page" onclick="nextPage()">
-            <h2>FREQUÊNCIA</h2>
-            <p>Consciência de Prosperidade não é sobre trabalhar duro, é sobre dominar a frequência da abundância.</p>
+            <h2>ABUNDÂNCIA</h2>
+            <p>Dominar a frequência da abundância não é sorte. É ciência aplicada ao pensamento e ação.</p>
             <div class="page-num">02 / 10</div>
         </section>
 
         <!-- PÁGINA 3 -->
         <section class="page" onclick="nextPage()">
             <h2>CRENÇA</h2>
-            <p>"O pensamento necessário para ganhar dinheiro é acreditar que existe o bastante para todo mundo."</p>
+            <p>"O pensamento necessário para prosperar é crer que existe o bastante para todo mundo."</p>
             <div class="page-num">03 / 10</div>
         </section>
 
         <!-- PÁGINA 4 -->
         <section class="page" onclick="nextPage()">
             <h2>OPOSIÇÃO</h2>
-            <p>Procure o que todo mundo está fazendo e faça exatamente o oposto. A riqueza está onde ninguém olha.</p>
+            <p>Procure o que todos estão fazendo e faça o oposto. A riqueza habita onde a multidão não olha.</p>
             <div class="page-num">04 / 10</div>
         </section>
 
         <!-- PÁGINA 5 -->
         <section class="page" onclick="nextPage()">
             <h2>COMPLEXIDADE</h2>
-            <p>Quanto mais difícil o problema, maior a barreira de entrada e maior o seu prêmio. Complexidade é lucro.</p>
+            <p>Problemas difíceis afastam curiosos e premiam especialistas. Complexidade é lucro garantido.</p>
             <div class="page-num">05 / 10</div>
         </section>
 
         <!-- PÁGINA 6 -->
         <section class="page" onclick="nextPage()">
-            <h2>AÇÃO</h2>
-            <p>Pronto, Atire, Mire! Aja primeiro e analise depois. As condições nunca serão perfeitas. O mercado pune a hesitação.</p>
+            <h2>AGIR</h2>
+            <p>Pronto, Atire, Mire! Aja agora. A perfeição é inimiga da execução. O mercado pune a hesitação.</p>
             <div class="page-num">06 / 10</div>
         </section>
 
         <!-- PÁGINA 7 -->
         <section class="page" onclick="nextPage()">
             <h2>O PEDIDO</h2>
-            <p>Muitos falham porque não pedem. Faça sua apresentação e peça o fechamento. O dinheiro está no pedido.</p>
+            <p>Muitos vendedores falham por não pedirem o fechamento. Peça. O dinheiro está no pedido.</p>
             <div class="page-num">07 / 10</div>
         </section>
 
         <!-- PÁGINA 8 -->
         <section class="page" onclick="nextPage()">
             <h2>EQUILÍBRIO</h2>
-            <p>O Dízimo Cósmico: doe 1/10 da sua renda. Caridade abre portais que a lógica pura não consegue explicar.</p>
+            <p>A Lei do Dízimo: doe 1/10 da renda. A caridade abre os portais das oportunidades universais.</p>
             <div class="page-num">08 / 10</div>
         </section>
 
         <!-- PÁGINA 9 -->
         <section class="page" onclick="nextPage()">
             <h2>INTEGRIDADE</h2>
-            <p>Honestidade total. A confiança é a moeda mais cara. Sem integridade, o fracasso é garantido e final.</p>
+            <p>Honestidade é o maior ativo de um empreendedor. Se prometeu, entregue. Confiança é poder.</p>
             <div class="page-num">09 / 10</div>
         </section>
 
-        <!-- PÁGINA 10 (CARD DE NEGÓCIOS) -->
+        <!-- PÁGINA 10 -->
         <section class="page" onclick="nextPage()">
             <h2>GRÁFICA VIRTUAL</h2>
-            <p style="font-size: 0.9rem; color: var(--gold); font-family: 'Orbitron';">Business Card</p>
-            <p style="margin: 15px 0;"><strong>Desenvolvedor: Carlos Alberto Reis</strong><br>Ciclo 2026/2027</p>
-            <p style="font-size: 0.8rem; opacity: 0.7;">Suporte & Apoio (Doações)<br>Fone/Pix: <strong>61999487649</strong></p>
+            <p style="margin-bottom: 10px;">
+                <a href="https://khareis159.github.io/Business-Card/" target="_blank" class="card-link">Business Card</a>
+            </p>
+            <p style="font-size: 0.9rem;"><strong>Carlos Alberto Reis</strong><br>Dev. 2016/2027</p>
+            <p style="font-size: 0.75rem; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                Suporte & Apoio (Pix):<br><strong>61 999487649</strong>
+            </p>
             <div class="page-num">10 / 10</div>
         </section>
     </div>
 
     <div class="controls">
-        <button class="btn btn-print" onclick="window.print()">Imprimir PDF 📄</button>
-        <button class="btn btn-next" onclick="nextPage()">Próxima Página ➔</button>
+        <button class="btn btn-print" onclick="window.print()">Gerar PDF 📄</button>
+        <button class="btn btn-next" onclick="nextPage()">Avançar ➔</button>
     </div>
 
     <script>
@@ -202,17 +245,16 @@
             pages[current].classList.add('active');
         }
 
-        // --- BACKGROUND DE PARTICULAS ---
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.onresize = resize;
         resize();
 
-        let particles = Array(60).fill().map(() => ({
+        let particles = Array(40).fill().map(() => ({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            v: Math.random() * 0.5 + 0.2
+            v: Math.random() * 0.3 + 0.1
         }));
 
         function draw() {
@@ -220,7 +262,7 @@
             ctx.fillStyle = "#10b981";
             particles.forEach(p => {
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, 1, 0, Math.PI*2);
+                ctx.arc(p.x, p.y, 0.8, 0, Math.PI*2);
                 ctx.fill();
                 p.y -= p.v;
                 if(p.y < 0) p.y = canvas.height;
